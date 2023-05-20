@@ -3,6 +3,7 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
+  NotFoundException
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -47,6 +48,17 @@ export class UsersService {
     }
   }
 
+  async findOneById(id: string): Promise<User> {
+    try {
+      return await this.usersRepository.findOneByOrFail({ id });
+    } catch (error) {
+      this.handleDBErrors({
+        code: 'error-002',
+        detail: `user with '${id}' not found`,
+      });
+    }
+  }
+
   async block(id: string): Promise<User> {
     throw new Error('Block User not implemented');
   }
@@ -57,6 +69,8 @@ export class UsersService {
         throw new BadRequestException(error.detail.replace('Key ', ''));
       case 'error-001':
         throw new BadRequestException(error.detail.replace('Key ', ''));
+      case 'error-002':
+        throw new NotFoundException(error.detail.replace('Key ', ''));
       default:
         this.logger.error(error);
         throw new InternalServerErrorException('Please check server logs');
