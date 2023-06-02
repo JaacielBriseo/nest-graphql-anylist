@@ -11,6 +11,7 @@ import * as bcrypt from 'bcrypt';
 import { User } from './entities/user.entity';
 import { SignupInput } from '../auth/dto/inputs/signup.input';
 import { ValidRoles } from '../auth/enums/valid-roles.enum';
+import { UpdateUserInput } from './dto/update-user.input';
 
 @Injectable()
 export class UsersService {
@@ -72,6 +73,23 @@ export class UsersService {
     userToBlock.isActive = false;
     userToBlock.lastUpdateBy = adminUser;
     return await this.usersRepository.save(userToBlock);
+  }
+
+  async update(
+    id: string,
+    updateUserInput: UpdateUserInput,
+    adminUser: User,
+  ): Promise<User> {
+    try {
+      const user = await this.usersRepository.preload({
+        ...updateUserInput,
+        id,
+      });
+      user.lastUpdateBy = adminUser;
+      return await this.usersRepository.save(user);
+    } catch (error) {
+      this.handleDBErrors(error);
+    }
   }
 
   private handleDBErrors(error: any): never {
