@@ -7,5 +7,5 @@ export enum ValidRoles {
 }
 registerEnumType(ValidRoles, {
   name: 'ValidRoles',
-  description: 'Roles permitidos para la enumeracion de roles',
+  description: 'Valid roles for roles enum',
 });
