@@ -6,6 +6,8 @@ import { Item } from './entities/item.entity';
 import { User } from '../users/entities/user.entity';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { PaginationArgs, SearchArgs } from '../common/dto/args';
+
 @Resolver(() => Item)
 @UseGuards(JwtAuthGuard)
 export class ItemsResolver {
@@ -20,8 +22,13 @@ export class ItemsResolver {
   }
 
   @Query(() => [Item], { name: 'items' })
-  async findAll(@CurrentUser() user: User): Promise<Item[]> {
-    return this.itemsService.findAll(user);
+  async findAll(
+    @CurrentUser() user: User,
+    @Args() paginationArgs: PaginationArgs,
+    @Args() searchArgs: SearchArgs,
+  ): Promise<Item[]> {
+    console.log({ paginationArgs, searchArgs });
+    return this.itemsService.findAll(user, paginationArgs, searchArgs);
   }
 
   @Query(() => Item, { name: 'item' })
@@ -37,7 +44,7 @@ export class ItemsResolver {
     @Args('updateItemInput') updateItemInput: UpdateItemInput,
     @CurrentUser() user: User,
   ): Promise<Item> {
-    return this.itemsService.update(updateItemInput.id, updateItemInput,user);
+    return this.itemsService.update(updateItemInput.id, updateItemInput, user);
   }
 
   @Mutation(() => Item)
