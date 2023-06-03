@@ -9,7 +9,7 @@ import { ItemsModule } from '../items/items.module';
   providers: [UsersResolver, UsersService],
   imports: [TypeOrmModule.forFeature([User]), ItemsModule],
   exports: [
-    // TypeOrmModule,
+    TypeOrmModule,
     UsersService,
   ],
 })

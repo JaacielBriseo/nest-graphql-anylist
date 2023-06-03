@@ -30,3 +30,8 @@ yarn start:dev
 ```
 localhost:3000/graphql
 ```
+
+8. Execute executeSeed **"mutation"** to fill db with some data
+
+_Warning_:
+_This mutation deletes previous data and creates new users and items_

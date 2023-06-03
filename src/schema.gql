@@ -25,6 +25,11 @@ type AuthResponse {
   user: User!
 }
 
+type SeedResponse {
+  ok: Boolean!
+  msg: String!
+}
+
 type Query {
   revalidate: AuthResponse!
   users(roles: [ValidRoles!] = []): [User!]!
@@ -48,6 +53,9 @@ type Mutation {
   createItem(createItemInput: CreateItemInput!): Item!
   updateItem(updateItemInput: UpdateItemInput!): Item!
   removeItem(id: ID!): Item!
+
+  """Fill DB with some data for development"""
+  executeSeed: SeedResponse!
 }
 
 input SignupInput {
