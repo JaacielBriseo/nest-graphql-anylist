@@ -6,6 +6,7 @@ type ListItem {
   id: ID!
   quantity: Float!
   completed: Boolean!
+  list: List!
   item: Item!
 }
 
@@ -13,7 +14,8 @@ type List {
   id: ID!
   name: String!
   user: User!
-  listItem: [ListItem!]!
+  items(offset: Int = 0, limit: Int = 10, search: String): [ListItem!]!
+  totalItems: Float!
 }
 
 type User {
@@ -55,7 +57,7 @@ type Query {
   item(id: ID!): Item!
   lists(offset: Int = 0, limit: Int = 10, search: String): [List!]!
   list(id: ID!): List!
-  listItem(id: Int!): ListItem!
+  listItem(id: String!): ListItem!
 }
 
 """Valid roles for roles enum"""
@@ -76,12 +78,11 @@ type Mutation {
   createList(createListInput: CreateListInput!): List!
   updateList(updateListInput: UpdateListInput!): List!
   removeList(id: ID!): List!
+  createListItem(createListItemInput: CreateListItemInput!): ListItem!
+  updateListItem(updateListItemInput: UpdateListItemInput!): ListItem!
 
   """Fill DB with some data for development"""
   executeSeed: SeedResponse!
-  createListItem(createListItemInput: CreateListItemInput!): ListItem!
-  updateListItem(updateListItemInput: UpdateListItemInput!): ListItem!
-  removeListItem(id: Int!): ListItem!
 }
 
 input SignupInput {
@@ -125,12 +126,16 @@ input UpdateListInput {
 }
 
 input CreateListItemInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  quantity: Float = 0
+  completed: Boolean = false
+  listId: ID!
+  itemId: ID!
 }
 
 input UpdateListItemInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  quantity: Float = 0
+  completed: Boolean = false
+  listId: ID
+  itemId: ID
+  id: ID!
 }
